@@ -60,6 +60,7 @@ void addMovie(Film* movie, ListeFilms& movieLib){
         Film ** movies = new Film * [newCap];
         for (int i = 0; i < movieLib.nElements; i++) {
             movies[i] = movieLib.elements[i];
+            int k = 0;
         }
         delete[] movieLib.elements;
         movieLib.elements = movies;
@@ -123,8 +124,6 @@ Film* lireFilm(istream& fichier, ListeFilms& movieLib)
     film.acteurs.elements = tableauDActeurs;
 
     //TODO: Ajouter le film à la liste des films dans lesquels l'acteur joue.
-    Film** movieList = new Film * ;
-
 
     for (int i : range(0, film.acteurs.nElements)){
         film.acteurs.elements[i] = lireActeur(fichier, movieLib);
@@ -152,10 +151,8 @@ ListeFilms creerListe(const string& nomFichier)
     //TODO: Ajouter le film à la liste.
 
     for (int i : range(0, nElements)){
-        Film * temp = lireFilm(fichier, films);
-        int k = 0;
+        auto temp = lireFilm(fichier, films);
         addMovie(temp, films);
-        int w = 0;
 
     }
 
@@ -232,18 +229,19 @@ int main()
 
 	//TODO: La ligne suivante devrait lire le fichier binaire en allouant la mémoire nécessaire.  Devrait afficher les noms de 20 acteurs sans doublons (par l'affichage pour fins de débogage dans votre fonction lireActeur).
 	ListeFilms listeFilms = creerListe("/Users/emirtuncbilek/Desktop/tp3/TD2-H23-Fichiers/films.bin");
-    destroyMovie(listeFilms, listeFilms.elements[0]);
     for (int i = 0; i < listeFilms.nElements; i++){
         if (listeFilms.elements[i] != nullptr) cout<<listeFilms.elements[i]->titre <<"\n";
     }
 
 
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
+
 	//TODO: Afficher le premier film de la liste.  Devrait être Alien.
-	
+
 	cout << ligneDeSeparation << "Les films sont:" << endl;
 	//TODO: Afficher la liste des films.  Il devrait y en avoir 7.
-	
+
+
 	//TODO: Modifier l'année de naissance de Benedict Cumberbatch pour être 1976 (elle était 0 dans les données lues du fichier).  Vous ne pouvez pas supposer l'ordre des films et des acteurs dans les listes, il faut y aller par son nom.
 	
 	cout << ligneDeSeparation << "Liste des films où Benedict Cumberbatch joue sont:" << endl;
@@ -256,6 +254,6 @@ int main()
 	
 	//TODO: Faire les appels qui manquent pour avoir 0% de lignes non exécutées dans le programme (aucune ligne rouge dans la couverture de code; c'est normal que les lignes de "new" et "delete" soient jaunes).  Vous avez aussi le droit d'effacer les lignes du programmes qui ne sont pas exécutée, si finalement vous pensez qu'elle ne sont pas utiles.
 	
-	//TODO: Détruire tout avant de terminer le programme.  La bibliothèque de verification_allocation devrait afficher "Aucune fuite detectee." a la sortie du programme; il affichera "Fuite detectee:" avec la liste des blocs, s'il manque des delete.
+	//TODO: Détruire tout avant de terminer le programme.  La bibliothèque de verification_allocation devrait afficher "Aucune fuite detectee." a la sortie du programme; il affichera "Fuite detectee:" avec la liste des blocs, s'il manque des deletes.
 
 }
