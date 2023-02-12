@@ -74,7 +74,7 @@ void addMovie(Film* movie, ListeFilms& movieLib){
 void removeMovie(Film* movie, ListeFilms& movieLib){
     for (int i = 0; i < movieLib.nElements; i ++){
         if (movieLib.elements[i] == movie) {
-            movieLib.elements[i] = NULL;
+            movieLib.elements[i] = nullptr;
         }
     }
 }
@@ -132,7 +132,8 @@ Film* lireFilm(istream& fichier, ListeFilms& movieLib)
         tableauDActeurs[i]->joueDans = moviesPlayedIn;
     }
     film.acteurs.elements = tableauDActeurs;
-    Film* f = &film;
+    Film* f = new Film;
+    *f = film;
 	return f; //TODO: Retourner le pointeur vers le nouveau film.
 }
 
@@ -145,26 +146,19 @@ ListeFilms creerListe(const string& nomFichier)
 
 	//TODO: Créer une liste de films vide.
     Film ** filmsInit = new Film * [0];
-    ListeFilms films {nElements, 0, filmsInit};
-    Film** filmss = new Film * [nElements];
+    ListeFilms films {0, 0, filmsInit};
     //TODO: Ajouter le film à la liste.
+
     for (int i : range(0, nElements)){
-        Film* mov = lireFilm(fichier, films);
-        // fucks up here :(
-        films.elements[i] = mov;
-        films.nElements++;
-        //filmss[i] = mov;
+        Film * temp = lireFilm(fichier, films);
+        addMovie(temp, films);
     }
 
     //TODO: Retourner la liste de films.
-    string w = films.elements[0]->titre;
-    cout<<w;
-    // and here :(
     return films;
 }
 
-
-//TODO: Une fonction pour détruire un film (relâcher toute la mémoire associée à ce film, et les acteurs qui ne jouent plus dans aucun films de la collection).  Noter qu'il faut enleve le film détruit des films dans lesquels jouent les acteurs.  Pour fins de débogage, affichez les noms des acteurs lors de leur destruction.
+//TODO: Une fonction pour détruire un film (relâcher toute la mémoire associée à ce film, et les acteurs qui ne jouent plus dans aucun films de la collection).  Noter qu'il faut enlever le film détruit des films dans lesquels jouent les acteurs.  Pour fins de débogage, affichez les noms des acteurs lors de leur destruction.
 
 //TODO: Une fonction pour détruire une ListeFilms et tous les films qu'elle contient.
 
