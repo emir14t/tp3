@@ -61,7 +61,6 @@ void addMovie(Film* movie, ListeFilms& movieLib){
         for (int i = 0; i < movieLib.nElements; i++) {
             movies[i] = movieLib.elements[i];
         }
-
         delete[] movieLib.elements;
         movieLib.elements = movies;
         movieLib.capacite = newCap;
@@ -121,17 +120,20 @@ Film* lireFilm(istream& fichier, ListeFilms& movieLib)
 
     Acteur** tableauDActeurs = new Acteur * [film.acteurs.nElements];
     film.acteurs.capacite = film.acteurs.nElements;
+    film.acteurs.elements = tableauDActeurs;
 
     //TODO: Ajouter le film à la liste des films dans lesquels l'acteur joue.
     Film** movieList = new Film * ;
-    ListeFilms moviesPlayedIn {0, 0, movieList};
-    addMovie(&film, moviesPlayedIn);
+
 
     for (int i : range(0, film.acteurs.nElements)){
-        tableauDActeurs[i] = lireActeur(fichier, movieLib);
-        tableauDActeurs[i]->joueDans = moviesPlayedIn;
+        film.acteurs.elements[i] = lireActeur(fichier, movieLib);
+        if (film.acteurs.elements[i]->joueDans.nElements != 0){
+            film.acteurs.elements[i]->joueDans = ListeFilms{0, 0, {}};
+        }
+        addMovie(&film, film.acteurs.elements[i]->joueDans);
     }
-    film.acteurs.elements = tableauDActeurs;
+
     Film* f = new Film;
     *f = film;
 	return f; //TODO: Retourner le pointeur vers le nouveau film.
@@ -151,7 +153,10 @@ ListeFilms creerListe(const string& nomFichier)
 
     for (int i : range(0, nElements)){
         Film * temp = lireFilm(fichier, films);
+        int k = 0;
         addMovie(temp, films);
+        int w = 0;
+
     }
 
     //TODO: Retourner la liste de films.
@@ -159,6 +164,26 @@ ListeFilms creerListe(const string& nomFichier)
 }
 
 //TODO: Une fonction pour détruire un film (relâcher toute la mémoire associée à ce film, et les acteurs qui ne jouent plus dans aucun films de la collection).  Noter qu'il faut enlever le film détruit des films dans lesquels jouent les acteurs.  Pour fins de débogage, affichez les noms des acteurs lors de leur destruction.
+
+void destroyMovie(ListeFilms& movieLib, Film* film){
+    for (int i: range(0, movieLib.nElements)){
+        if (movieLib.elements[i] == film){
+            // movie found: deleting it completely
+            cout<< movieLib.elements[i]->acteurs.elements[0]->joueDans.elements[0]->titre << "\n";
+            cout<< film->acteurs.elements[0]->joueDans.elements[0]->titre << "\n";
+
+            // delete actors
+            /*for (int k : range(0, movieLib.elements[i]->acteurs.nElements)){
+                if (movieLib.elements[i]->acteurs.elements[k]->joueDans.nElements == 1){
+                    delete[] movieLib.elements[i]->acteurs.elements[k]->joueDans.elements[0];
+                    delete[] movieLib.elements[i]->acteurs.elements[k];
+                } else delete movieLib.elements[i]->acteurs.elements[k];;
+            }
+            // delete movie
+            delete[] movieLib.elements[i];
+        */}
+    }
+}
 
 //TODO: Une fonction pour détruire une ListeFilms et tous les films qu'elle contient.
 
@@ -207,9 +232,12 @@ int main()
 
 	//TODO: La ligne suivante devrait lire le fichier binaire en allouant la mémoire nécessaire.  Devrait afficher les noms de 20 acteurs sans doublons (par l'affichage pour fins de débogage dans votre fonction lireActeur).
 	ListeFilms listeFilms = creerListe("/Users/emirtuncbilek/Desktop/tp3/TD2-H23-Fichiers/films.bin");
-	for (int i = 0; i < listeFilms.nElements; i++){
+    destroyMovie(listeFilms, listeFilms.elements[0]);
+    for (int i = 0; i < listeFilms.nElements; i++){
         if (listeFilms.elements[i] != nullptr) cout<<listeFilms.elements[i]->titre <<"\n";
     }
+
+
 	cout << ligneDeSeparation << "Le premier film de la liste est:" << endl;
 	//TODO: Afficher le premier film de la liste.  Devrait être Alien.
 	
