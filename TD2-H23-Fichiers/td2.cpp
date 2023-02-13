@@ -127,8 +127,9 @@ Film* lireFilm(istream& fichier, ListeFilms& movieLib)
 
     for (int i : range(0, film.acteurs.nElements)){
         film.acteurs.elements[i] = lireActeur(fichier, movieLib);
-        if (film.acteurs.elements[i]->joueDans.nElements != 0){
-            film.acteurs.elements[i]->joueDans = ListeFilms{0, 0, {}};
+        if (film.acteurs.elements[i]->joueDans.nElements == 0){
+            Film ** joueDans = new Film * [film.acteurs.elements[i]->joueDans.capacite];
+            film.acteurs.elements[i]->joueDans = ListeFilms{0, 0, joueDans};
         }
         addMovie(&film, film.acteurs.elements[i]->joueDans);
     }
@@ -152,8 +153,9 @@ ListeFilms creerListe(const string& nomFichier)
 
     for (int i : range(0, nElements)){
         auto temp = lireFilm(fichier, films);
+        cout<<temp->titre;
         addMovie(temp, films);
-
+        int k = 0;
     }
 
     //TODO: Retourner la liste de films.
@@ -166,19 +168,16 @@ void destroyMovie(ListeFilms& movieLib, Film* film){
     for (int i: range(0, movieLib.nElements)){
         if (movieLib.elements[i] == film){
             // movie found: deleting it completely
-            cout<< movieLib.elements[i]->acteurs.elements[0]->joueDans.elements[0]->titre << "\n";
-            cout<< film->acteurs.elements[0]->joueDans.elements[0]->titre << "\n";
-
             // delete actors
-            /*for (int k : range(0, movieLib.elements[i]->acteurs.nElements)){
+            for (int k : range(0, movieLib.elements[i]->acteurs.nElements)){
                 if (movieLib.elements[i]->acteurs.elements[k]->joueDans.nElements == 1){
                     delete[] movieLib.elements[i]->acteurs.elements[k]->joueDans.elements[0];
                     delete[] movieLib.elements[i]->acteurs.elements[k];
-                } else delete movieLib.elements[i]->acteurs.elements[k];;
+                } else delete movieLib.elements[i]->acteurs.elements[k];
             }
             // delete movie
             delete[] movieLib.elements[i];
-        */}
+        }
     }
 }
 
